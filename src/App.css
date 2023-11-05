@@ -1,0 +1,131 @@
+body,html{
+  font-family: 'K2D', sans-serif !important;
+}
+
+.css-wn5hww-MuiLineElement-root {
+  stroke: #666666 !important;
+}
+
+.MuiHighlightElement-root{
+  fill: #666666 !important;
+}
+
+.MuiChartsTooltip-root{
+  background-color: #666666 !important;
+}
+
+.MuiTypography-root{
+  color: #dcdcdc !important;
+}
+
+.MuiChartsTooltip-markCell{
+  display: none !important;
+}
+
+.MuiChartsTooltip-labelCell {
+  display: none !important;
+}
+
+.MuiChartsTooltip-valueCell{
+  padding: 8px 16px !important;
+}
+
+.button:hover{
+  color: #dcdcdc !important;
+  background-color: #666666 !important;
+  transition: all 0.35s;
+  text-shadow: 0px 0px 4px #dcdcdc;
+}
+
+.button{
+  box-shadow: 1px 1px 2px black;
+  color: white;
+}
+
+.input{
+  background-color: white;
+  border: none;
+  border-radius: 4px;
+  width: 3.5rem;
+  transition: all 0.35s;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.input:disabled{
+  background-color: #dcdcdc;
+  transition: all 0.35s;
+}
+
+.input:focus{
+  outline: none;
+}
+
+@media screen and (min-width: 320px) and (max-width:584px) {
+  .heading{
+    font-size: 1.5rem;
+  }
+  .sub-heading{
+    font-size: 1.2rem;
+  }
+  .button-text{
+    font-size: 1rem;
+  }
+  .bottom-part{
+    margin-top: 3rem !important;
+  }
+  .main-padding{
+    padding: 20px;
+  };
+}
+@media screen and (min-width: 585px) and (max-width:767px) {
+
+}
+@media screen and (min-width: 768px) and (max-width:1023px) {
+
+}
+@media screen and (min-width: 1024px) and (max-width:1200px) {
+
+}
+@media screen and (min-width: 1201px) and (max-width:1365px) {
+  .heading{
+    font-size: 2rem;
+  }
+  .sub-heading{
+    font-size: 1.5rem;
+  }
+  .button-text{
+    font-size: 1.15rem;
+  }
+  .main-padding{
+    padding: 40px;
+  };
+}
+
+@media screen and (min-width: 1366px) {
+  .heading{
+    font-size: 2.3rem;
+  }
+  .sub-heading{
+    font-size: 1.5rem;
+  }
+  .button-text{
+    font-size: 1.3rem;
+  }
+  .bottom-part{
+    margin-top: 1.5rem !important;
+  }
+  .main-padding{
+    padding: 50px;
+  };
+}
+
