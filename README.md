@@ -1,5 +1,8 @@
 # Frontend
 
+## Working Demo running on AWS EC2
+http://3.68.215.217/
+
 ## Features
 - displaying real-time data
 - displaying historical data through a form of a graph
