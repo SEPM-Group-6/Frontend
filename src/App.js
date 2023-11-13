@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
+import { LineChart } from '@mui/x-charts';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
 //graph function only works for 1 day, after that it needs to be reset (in backend supply only data from current day)
@@ -72,13 +73,18 @@ function App() {
   const [settingPeopleInside, setSettingPeopleInside] = useState(false)
 
   function checkThreshold() {
-    if (valueToDisplay > threshold) {
+    if (valueToDisplay >= threshold) {
       setThresholdMet(true)
     } else {
       setThresholdMet(false)
       return false
     }
   }
+
+  const formattedData = data.map(timestamp => {
+    const [year, month, day, hours, minutes, seconds] = timestamp;
+    return new Date(year, month - 1, day, hours, minutes, seconds);
+  });
 
   return (
     <div className='main-padding'>
@@ -105,28 +111,35 @@ function App() {
         <div className={'col-12 bottom-part' + (data[data.length-1][3] - data[0][3] > 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
           <div className='sub-heading' style={{color:'grey'}}>Activity Graph</div>
           <Stack direction="row" sx={{ width: '100%' }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <SparkLineChart 
-              data={data.map((item) => (item[5]))}
-
-              xAxis={{
-                scaleType: 'time',
-                data:data.map((item) => (new Date(item[0], item[1], item[2], item[3], item[4]))),
-                valueFormatter: (value) => {
-                  const month = value.toLocaleString('en-US', { month: 'short' });
-                  const day = value.getDate();
-                  var minutes = value.getMinutes();
-                  if (minutes < 10) {
-                    var minutes = `0${minutes}`;
-                  }
-                  const customText = "Date: "; // Add your custom text here
-                  return `${customText}${month} ${day}, ${value.getHours()}:${minutes}`;
-                }, }} 
-                height={100} 
-                showTooltip 
-                showHighlight
-                valueFormatter={(value) => `People inside: ${value}`}
-                />                
+            <Box sx={{ flexGrow: 1 }}>              
+              <LineChart
+              colors={['#666666']}
+                xAxis={[
+                  {
+                    data: formattedData,
+                    label: 'Time', 
+                    scaleType: 'time', 
+                    valueFormatter: (value) => {
+                      const hours = value.getHours();
+                      const minutes = value.getMinutes();
+                      const amOrPm = hours >= 12 ? 'PM' : 'AM';
+                      const formattedHours = hours % 12 === 0 ? 12 : hours % 12; // Adjust 0 to 12 for AM/PM
+                      const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+                      return `Time: ${formattedHours}:${formattedMinutes} ${amOrPm}`;
+                    },
+                  },
+                ]}
+                yAxis={[
+                  { id: 'linearAxis',
+                  scaleType: 'linear',
+                 },
+                ]}
+                series={[
+                  { yAxisKey: 'linearAxis', data: data.map((item) => item[5]),valueFormatter: (value) => `Number of people: ${value}`,},
+                ]}
+                leftAxis="linearAxis"
+                height={300}
+              />
             </Box>
           </Stack>
         </div>
