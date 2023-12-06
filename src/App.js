@@ -18,50 +18,64 @@ import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 //visualy only allow for up to 99 people to enter a room
 
 //call checkThreshold() when changing the number of people inside through socket
-//notofication when threshold is met
+//notification when threshold is met
 
 function App() {
+  const [data, setData] = useState([[]])
+
+  const [settingPeopleInside, setSettingPeopleInside] = useState(false)
+
+  const [overlappingDiv2, setOverlappingDiv2] = useState(true)
 
   async function getNumberOfPeopleInside() {
-    const response = await fetch('http://localhost:3000/numberOfPeopleInside')
-    const data = await response.json()
-    setValueToDisplay(data.numberOfPeopleInside)
-  }
+    const response = await fetch('https://wfb24jp1fc.execute-api.eu-central-1.amazonaws.com/Test', {method: 'GET',headers: {'Content-Type': 'application/json'}}); //return only data from current day
+    const datas = await response.json()
 
-  async function changeNumberOfPeopleInside() {
-    const response = await fetch('http://localhost:3000/changeNumberOfPeopleInside', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({numberOfPeopleInside: valueToDisplay})
-    })
-    const data = await response.json()
-    console.log(data)
-  }
+    //sort data by time
+    datas.body.sort((a, b) => (a['EnterID'] > b['EnterID']) ? 1 : -1)
+        
+    const new_array = []
+    datas.body.map(item => {
+      new_array.push(parseDateTime(item['EnterID'],item["People_Count"]))}
+    )
 
-  const data = [[2023, 11, 5, 14, 51, 1], [2023, 11, 5, 14, 52, 3], [2023, 11, 5, 14, 54, 4], [2023, 11, 5, 14, 55, 2], [2023, 11, 5, 14, 56, 3], [2023, 11, 5, 14, 57, 5], [2023, 11, 5, 14, 58, 8], [2023, 11, 5, 14, 59, 12], [2023, 11, 5, 15, 0, 13], [2023, 11, 5, 15, 1, 12], [2023, 11, 5, 15, 3, 15], [2023, 11, 5, 15, 6, 13], [2023, 11, 5, 15, 7, 12], [2023, 11, 5, 15, 8, 11], [2023, 11, 5, 15, 11, 8], [2023, 11, 5, 15, 12, 7], [2023, 11, 5, 15, 13, 5], [2023, 11, 5, 15, 15, 1], [2023, 11, 5, 15, 16, 0], [2023, 11, 5, 15, 17, 0]]
+    setData(new_array)
+    
+    console.log(settingPeopleInside,overlappingDiv2)
+    if (settingPeopleInside === false){
+      setValueToDisplay(new_array[new_array.length-1][6])
+    }
+  }
+  
+
+  useEffect(() => {
+    let intervalId;
+    if (!settingPeopleInside) {
+      intervalId = setInterval(() => {
+        getNumberOfPeopleInside();
+      }, 1000);
+    }
+    return () => clearInterval(intervalId);
+  }, [settingPeopleInside]);
+
+  function parseDateTime(dateTimeString,value) {
+    const [datePart, timePart] = dateTimeString.split(' ');
+    const [year, month, day] = datePart.split('-').map(Number);
+    const [hour, minute, seconds] = timePart.split(':').map(Number);
+  
+    return [year, month, day, hour, minute, seconds, value];
+  }
   
   const [edit, setEdit] = useState(true)
 
   const [valueToDisplay, setValueToDisplay] = useState(0)
 
-  const [overlappingDiv2, setOverlappingDiv2] = useState(true)
-
   const [thresholdMet, setThresholdMet] = useState(false)
 
   function handleChange() {
-    setEdit(!edit)
+    //async function to send data to backend
     setSettingPeopleInside(false)
     setOverlappingDiv2(true)
-
-    if (valueToDisplay === '' || parseInt(valueToDisplay) <= 0 || valueToDisplay == -0) {
-      setValueToDisplay(0)
-    } else {
-      setValueToDisplay(parseInt(valueToDisplay))
-    }
-
-    checkThreshold()
   }
 
   const [settingThreshold, setSettingThreshold] = useState(false)
@@ -69,8 +83,6 @@ function App() {
   const [threshold, setThreshold] = useState(30)
 
   const [overlappingDiv, setOverlappingDiv] = useState(true)
-
-  const [settingPeopleInside, setSettingPeopleInside] = useState(false)
 
   function checkThreshold() {
     if (valueToDisplay >= threshold) {
@@ -81,14 +93,18 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    checkThreshold()
+  }, [valueToDisplay])
+
   const formattedData = data.map(timestamp => {
     const [year, month, day, hours, minutes, seconds] = timestamp;
-    return new Date(year, month - 1, day, hours, minutes, seconds);
+    return new Date(year, month, day, hours, minutes, seconds);
   });
 
   return (
     <div className='main-padding'>
-      <div className='heading'>Software-Engineering Project Group 6 Dashboard</div>
+      <div className='heading'>Software-Engineering Project Dashboard - Group 6</div>
 
       <div className='row mt-4' style={{padding:'20px'}}>
 
@@ -108,7 +124,7 @@ function App() {
             
         </div>
         
-        <div className={'col-12 bottom-part' + (data[data.length-1][3] - data[0][3] > 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
+        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][4] - data[0][4] > 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
           <div className='sub-heading' style={{color:'grey'}}>Activity Graph</div>
           <Stack direction="row" sx={{ width: '100%' }}>
             <Box sx={{ flexGrow: 1 }}>              
@@ -122,10 +138,12 @@ function App() {
                     valueFormatter: (value) => {
                       const hours = value.getHours();
                       const minutes = value.getMinutes();
+                      const seconds = value.getSeconds();
                       const amOrPm = hours >= 12 ? 'PM' : 'AM';
                       const formattedHours = hours % 12 === 0 ? 12 : hours % 12; // Adjust 0 to 12 for AM/PM
                       const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
-                      return `Time: ${formattedHours}:${formattedMinutes} ${amOrPm}`;
+                      const formattedSeconds = seconds < 10 ? `0${seconds}` : seconds;
+                      return `Time: ${formattedHours}:${formattedMinutes}:${formattedSeconds} ${amOrPm}`;
                     },
                   },
                 ]}
@@ -135,7 +153,7 @@ function App() {
                  },
                 ]}
                 series={[
-                  { yAxisKey: 'linearAxis', data: data.map((item) => item[5]),valueFormatter: (value) => `Number of people: ${value}`,},
+                  { yAxisKey: 'linearAxis', data: (data.length > 0?data.map((item) => item[6]):[]),valueFormatter: (value) => `Number of people: ${value}`,},
                 ]}
                 leftAxis="linearAxis"
                 height={300}
