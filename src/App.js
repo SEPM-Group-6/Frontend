@@ -28,11 +28,23 @@ function App() {
   const [overlappingDiv2, setOverlappingDiv2] = useState(true)
 
   async function getNumberOfPeopleInside() {
-    const response = await fetch('https://wfb24jp1fc.execute-api.eu-central-1.amazonaws.com/Test', {method: 'GET',headers: {'Content-Type': 'application/json'}}); //return only data from current day
+    const response = await fetch('https://wfb24jp1fc.execute-api.eu-central-1.amazonaws.com/Test', {method: 'GET',headers: {'Content-Type': 'application/json'}});
     const datas = await response.json()
 
     //sort data by time
     datas.body.sort((a, b) => (a['EnterID'] > b['EnterID']) ? 1 : -1)
+
+    //keep only one data point per minute, if there are multiple data points in one minute, take the last one
+    let i = 0
+    while (i < datas.body.length-1) {
+      if (datas.body[i]['EnterID'].slice(0,16) === datas.body[i+1]['EnterID'].slice(0,16)) {
+        datas.body.splice(i,1)
+      }
+      else {
+        i++
+      }
+    }
+    
         
     const new_array = []
     datas.body.map(item => {
@@ -44,6 +56,14 @@ function App() {
     console.log(settingPeopleInside,overlappingDiv2)
     if (settingPeopleInside === false){
       setValueToDisplay(new_array[new_array.length-1][6])
+    }
+  }
+
+  async function changeNumberOfPeopleInside(value) {
+    try{
+      const response = await fetch('https://meks4q3843.execute-api.eu-central-1.amazonaws.com/Test/?People_Count='+value, {method: 'POST',headers: {'Content-Type': 'application/json'}});
+    } catch (error) {
+      console.log(error)
     }
   }
   
@@ -74,6 +94,7 @@ function App() {
 
   function handleChange() {
     //async function to send data to backend
+    changeNumberOfPeopleInside(valueToDisplay)
     setSettingPeopleInside(false)
     setOverlappingDiv2(true)
   }
@@ -124,7 +145,7 @@ function App() {
             
         </div>
         
-        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][4] - data[0][4] > 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
+        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][4] - data[0][4] <= 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
           <div className='sub-heading' style={{color:'grey'}}>Activity Graph</div>
           <Stack direction="row" sx={{ width: '100%' }}>
             <Box sx={{ flexGrow: 1 }}>              
