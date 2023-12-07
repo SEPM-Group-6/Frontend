@@ -54,7 +54,7 @@ function App() {
     setData(new_array)
     
     console.log(settingPeopleInside,overlappingDiv2)
-    if (settingPeopleInside === false){
+    if (settingPeopleInside === false && new_array.length !== 0){
       setValueToDisplay(new_array[new_array.length-1][6])
     }
   }
@@ -145,7 +145,9 @@ function App() {
             
         </div>
         
-        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][4] - data[0][4] <= 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
+        {data.length !== 0
+        ?
+        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][4] - data[0][4] >= 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
           <div className='sub-heading' style={{color:'grey'}}>Activity Graph</div>
           <Stack direction="row" sx={{ width: '100%' }}>
             <Box sx={{ flexGrow: 1 }}>              
@@ -182,6 +184,8 @@ function App() {
             </Box>
           </Stack>
         </div>
+        :
+        null}
 
       </div>
       
