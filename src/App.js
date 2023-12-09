@@ -123,7 +123,7 @@ function App() {
   });
 
   return (
-    <div className='main-padding' style={{boxShadow: thresholdMet?'inset 0 0 50px 2px red':''}}>
+    <div className='main-padding' style={{boxShadow: thresholdMet?'inset 0 0 20px 2px red':''}}>
       <div className='heading'>Software-Engineering Project Dashboard - Group 6</div>
 
       <div className='row mt-4' style={{padding:'20px'}}>

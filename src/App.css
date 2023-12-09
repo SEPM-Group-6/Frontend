@@ -43,7 +43,6 @@ body,html{
   border: none;
   border-radius: 4px;
   transition: all 0.35s;
-  width: auto;
 }
 
 input::-webkit-outer-spin-button,
@@ -87,6 +86,9 @@ input[type=number] {
   .top{
     top: 1px !important;
   }
+  .input{
+    width: 50%;
+  }
 
 }
 @media screen and (min-width: 585px) and (max-width:767px) {
@@ -114,6 +116,9 @@ input[type=number] {
   .top{
     top: 6px !important;
   }
+  .input{
+    width: 75%;
+  }
 }
 
 @media screen and (min-width: 1366px) {
@@ -134,6 +139,9 @@ input[type=number] {
   }
   .top{
     top: 7px !important;
+  }
+  .input{
+    width: 75%;
   }
 }
 
