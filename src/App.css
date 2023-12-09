@@ -42,8 +42,8 @@ body,html{
   background-color: #dcdcdc;
   border: none;
   border-radius: 4px;
-  width: 3.5rem;
   transition: all 0.35s;
+  width: auto;
 }
 
 input::-webkit-outer-spin-button,

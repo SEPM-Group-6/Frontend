@@ -1,9 +1,8 @@
 import './App.css';
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import { SparkLineChart } from '@mui/x-charts/SparkLineChart';
 import { LineChart } from '@mui/x-charts';
 import WarningAmberRoundedIcon from '@mui/icons-material/WarningAmberRounded';
 
@@ -124,7 +123,7 @@ function App() {
   });
 
   return (
-    <div className='main-padding'>
+    <div className='main-padding' style={{boxShadow: thresholdMet?'inset 0 0 50px 2px red':''}}>
       <div className='heading'>Software-Engineering Project Dashboard - Group 6</div>
 
       <div className='row mt-4' style={{padding:'20px'}}>
@@ -144,10 +143,9 @@ function App() {
           <button className='mt-3 button button-text' onClick={() => (setThreshold(threshold),setSettingThreshold(false),setOverlappingDiv(true),checkThreshold())} style={{border:'none',borderRadius:'4px',backgroundColor:'#555555',padding:'0px 20px',visibility:(settingThreshold?'visible':'hidden'),opacity:(settingThreshold?'1':'0'),transition:'all 0.35s'}}>Set</button><br></br>
             
         </div>
-        
         {data.length !== 0
         ?
-        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][4] - data[0][4] >= 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
+        <div className={'col-12 bottom-part' + (data.length !== 0 && data[data.length-1][3] - data[0][3] >= 2 ? ' col-sm-12':' col-sm-6')} style={{borderRadius:'4px',padding:'0px 12px'}}>
           <div className='sub-heading' style={{color:'grey'}}>Activity Graph</div>
           <Stack direction="row" sx={{ width: '100%' }}>
             <Box sx={{ flexGrow: 1 }}>              
