@@ -94,16 +94,19 @@ input[type=number] {
 @media screen and (min-width: 585px) and (max-width:767px) {
   .heading{
     font-size: 1.5rem;
+    padding: 20px;
   }
 }
 @media screen and (min-width: 768px) and (max-width:1023px) {
   .heading{
     font-size: 1.5rem;
+    padding: 15px;
   }
 }
 @media screen and (min-width: 1024px) and (max-width:1200px) {
   .heading{
     font-size: 2rem;
+    padding: 15px;
   }
 }
 @media screen and (min-width: 1201px) and (max-width:1365px) {
