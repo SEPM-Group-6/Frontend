@@ -131,7 +131,15 @@ function App() {
         <div className='col-6 col-sm-3 bottom-part'>
 
           <div className='sub-heading' style={{color:'grey',position:'relative'}}>People inside <a></a></div>
-          <div className='mt-1 input' style={{fontSize:'2.5rem',position:'relative'}}><input type='number' disabled={!settingPeopleInside} onChange={(e) => (setValueToDisplay(e.target.value))} value={valueToDisplay} className='input'></input><div className='input' onClick={() => (setSettingPeopleInside(true),setOverlappingDiv2(false))} style={{position:'absolute',backgroundColor:'transparent',zIndex:'2',left:'0px',top:'0px',width:'100%',height:'100%',display:(overlappingDiv2?'block':'none')}}></div></div>
+          <div className='mt-1 input' style={{fontSize:'2.5rem',position:'relative'}}><input type='number' disabled={!settingPeopleInside} onChange={(e) => {
+            let value
+            if (e.target.value === ''){
+              value = e.target.value;
+            } else {
+              value = Math.floor(Number(e.target.value));
+            }
+            setValueToDisplay(value < 0?0:value)
+            }} value={valueToDisplay} className='input'></input><div className='input' onClick={() => (setSettingPeopleInside(true),setOverlappingDiv2(false))} style={{position:'absolute',backgroundColor:'transparent',zIndex:'2',left:'0px',top:'0px',width:'100%',height:'100%',display:(overlappingDiv2?'block':'none')}}></div></div>
           <button className='mt-3 button button-text' onClick={() => handleChange()} style={{border:'none',borderRadius:'4px',backgroundColor:'#555555',padding:'0px 20px',visibility:(settingPeopleInside?'visible':'hidden'),opacity:(settingPeopleInside?'1':'0'),transition:'all 0.35s'}} >Apply</button><br></br>
             
         </div>
@@ -139,7 +147,15 @@ function App() {
         <div className='col-6 col-sm-3 bottom-part'>
 
           <div className='sub-heading' style={{color:'grey',position:'relative'}}>Threshold <WarningAmberRoundedIcon className='top' style={{visibility:(thresholdMet?'visible':'hidden'),opacity:(thresholdMet?'1':'0'),transition:'all 0.35s',color:'red',position:'absolute',top:'2px'}}/></div>
-          <div className='mt-1 input' style={{fontSize:'2.5rem',position:'relative'}}><input type='number' disabled={!settingThreshold} onChange={(e) => (setThreshold(e.target.value))} value={threshold} className='input'></input><div className='input' onClick={() => (setSettingThreshold(true),setOverlappingDiv(false))} style={{position:'absolute',backgroundColor:'transparent',zIndex:'2',left:'0px',top:'0px',width:'100%',height:'100%',display:(overlappingDiv?'block':'none')}}></div></div>
+          <div className='mt-1 input' style={{fontSize:'2.5rem',position:'relative'}}><input type='number' disabled={!settingThreshold} onChange={(e) => {
+            let value
+            if (e.target.value === ''){
+              value = e.target.value;
+            } else {
+              value = Math.floor(Number(e.target.value));
+            }
+            setThreshold(value < 0?30:value)
+            }} value={threshold} className='input'></input><div className='input' onClick={() => (setSettingThreshold(true),setOverlappingDiv(false))} style={{position:'absolute',backgroundColor:'transparent',zIndex:'2',left:'0px',top:'0px',width:'100%',height:'100%',display:(overlappingDiv?'block':'none')}}></div></div>
           <button className='mt-3 button button-text' onClick={() => (setThreshold(threshold),setSettingThreshold(false),setOverlappingDiv(true),checkThreshold())} style={{border:'none',borderRadius:'4px',backgroundColor:'#555555',padding:'0px 20px',visibility:(settingThreshold?'visible':'hidden'),opacity:(settingThreshold?'1':'0'),transition:'all 0.35s'}}>Set</button><br></br>
             
         </div>
